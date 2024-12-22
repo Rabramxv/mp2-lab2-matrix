@@ -26,86 +26,185 @@ TEST(TDynamicMatrix, can_create_copied_matrix)
 
 TEST(TDynamicMatrix, copied_matrix_is_equal_to_source_one)
 {
-  ADD_FAILURE();
+    TDynamicMatrix<int> src(3); // 3x3 ìàòðèöà
+    for (size_t i = 0; i < 3; ++i) {
+        for (size_t j = 0; j < 3; ++j) {
+            src[i][j] = i + j;
+        }
+    }
+    TDynamicMatrix<int> copy = src; // Êîïèðóåì ìàòðèöó
+    EXPECT_EQ(copy, src); //êîïèÿ ðàâíà èñõîäíîé
 }
 
 TEST(TDynamicMatrix, copied_matrix_has_its_own_memory)
 {
-  ADD_FAILURE();
+    TDynamicMatrix<int> src(3); 
+    for (size_t i = 0; i < 3; ++i) {
+        for (size_t j = 0; j < 3; ++j) {
+            src[i][j] = i + j; 
+        }
+    }
+    TDynamicMatrix<int> copy = src;
+    copy[0][0] = 100; // Èçìåíÿåì êîïèþ
+    // Ïðîâåðÿåì, ÷òî èçìåíåíèå â êîïèè íå çàòðàãèâàåò îðèãèíàë
+    EXPECT_NE(copy[0][0], src[0][0]);
 }
 
 TEST(TDynamicMatrix, can_get_size)
 {
-  ADD_FAILURE();
+    TDynamicMatrix<int> matrix(3);
+    EXPECT_EQ(matrix.size(),3);
+    ///ADD_FAILURE();
 }
 
 TEST(TDynamicMatrix, can_set_and_get_element)
 {
-  ADD_FAILURE();
+    TDynamicMatrix<int> matrix(3); 
+    matrix[0][0] = 10;
+    matrix[1][1] = 20;
+    matrix[2][2] = 30;
+    // Ïðîâåðÿåì, ÷òî ïîëó÷àåìûå çíà÷åíèÿ êîððåêòíû
+    EXPECT_EQ(matrix[0][0], 10);
+    EXPECT_EQ(matrix[1][1], 20);
+    EXPECT_EQ(matrix[2][2], 30);
 }
 
 TEST(TDynamicMatrix, throws_when_set_element_with_negative_index)
 {
-  ADD_FAILURE();
+    TDynamicMatrix<int> matrix(3);
+    //ïðè ïîïûòêå óñòàíîâèòü ýëåìåíò ñ îòðèöàòåëüíûì èíäåêñîì èñêëþ÷åíèå
+    EXPECT_THROW(matrix[-1][0] = 5, std::out_of_range);
+    EXPECT_THROW(matrix[0][-1] = 5, std::out_of_range);
 }
 
 TEST(TDynamicMatrix, throws_when_set_element_with_too_large_index)
 {
-  ADD_FAILURE();
+    TDynamicMatrix<int> matrix(3);
+    //ïðè ïîïûòêå óñòàíîâèòü ýëåìåíò ñ èíäåêñîì, âûõîäÿùèì çà ïðåäåëû ìàòðèöû èñêëþ÷åíèå
+    EXPECT_THROW(matrix[3][0] = 5, std::out_of_range);
+    EXPECT_THROW(matrix[0][3] = 5, std::out_of_range);
 }
 
 TEST(TDynamicMatrix, can_assign_matrix_to_itself)
 {
-  ADD_FAILURE();
+    TDynamicMatrix<int> matrix(3);
+    matrix[0][0] = 5;
+    matrix[1][1] = 10;
+    matrix[2][2] = 15;
+
+    matrix = matrix;
+
+    EXPECT_EQ(matrix[0][0], 5); //ýëåìåíòû íå èçìåíèëèñü
+    EXPECT_EQ(matrix[1][1], 10);
+    EXPECT_EQ(matrix[2][2], 15);
 }
 
 TEST(TDynamicMatrix, can_assign_matrices_of_equal_size)
 {
-  ADD_FAILURE();
+    TDynamicMatrix<int> matrix1(3); 
+    matrix1[0][0] = 1;
+    matrix1[1][1] = 2;
+    matrix1[2][2] = 3;
+
+    TDynamicMatrix<int> matrix2(3);
+    matrix2 = matrix1;
+
+    EXPECT_EQ(matrix2[0][0], 1); //ýëåìåíòû ñêîïèðîâàíû ïðàâèëüíî
+    EXPECT_EQ(matrix2[1][1], 2);
+    EXPECT_EQ(matrix2[2][2], 3);
 }
 
 TEST(TDynamicMatrix, assign_operator_change_matrix_size)
 {
-  ADD_FAILURE();
-}
+    TDynamicMatrix<int> matrix1(3); // 3x3 ìàòðèöà
+    TDynamicMatrix<int> matrix2(4); // 4x4 ìàòðèöà
 
-TEST(TDynamicMatrix, can_assign_matrices_of_different_size)
-{
-  ADD_FAILURE();
+    matrix1 = matrix2;
+
+    EXPECT_EQ(matrix1.size(), 4);
 }
 
 TEST(TDynamicMatrix, compare_equal_matrices_return_true)
 {
-  ADD_FAILURE();
+    TDynamicMatrix<int> matrix1(3);
+    TDynamicMatrix<int> matrix2(3);
+
+    for (size_t i = 0; i < 3; ++i) {
+        for (size_t j = 0; j < 3; ++j) {
+            matrix1[i][j] = 1;
+            matrix2[i][j] = 1;
+        }
+    }
+    EXPECT_TRUE(matrix1 == matrix2);
 }
 
 TEST(TDynamicMatrix, compare_matrix_with_itself_return_true)
 {
-  ADD_FAILURE();
+    TDynamicMatrix<int> matrix(3);
+    EXPECT_TRUE(matrix == matrix);
 }
 
 TEST(TDynamicMatrix, matrices_with_different_size_are_not_equal)
 {
-  ADD_FAILURE();
+    TDynamicMatrix<int> matrix1(3); 
+    TDynamicMatrix<int> matrix2(4); 
+    EXPECT_FALSE(matrix1 == matrix2);
 }
 
 TEST(TDynamicMatrix, can_add_matrices_with_equal_size)
 {
-  ADD_FAILURE();
+    TDynamicMatrix<int> matrix1(3); 
+    TDynamicMatrix<int> matrix2(3); 
+    for (size_t i = 0; i < 3; ++i) {
+        for (size_t j = 0; j < 3; ++j) {
+            matrix1[i][j] = i + j; // Çàïîëíåíèå çíà÷åíèÿìè
+            matrix2[i][j] = i * j; 
+        }
+    }
+    TDynamicMatrix<int> result = matrix1 + matrix2;
+    EXPECT_EQ(result[0][0], 0); // 0 + 0 = 0
+    EXPECT_EQ(result[0][1], 1); // 0 + 1 = 1
+    EXPECT_EQ(result[0][2], 2); // 0 + 2 = 2
+    EXPECT_EQ(result[1][0], 1); 
+    EXPECT_EQ(result[1][1], 3); 
+    EXPECT_EQ(result[1][2], 5); 
+    EXPECT_EQ(result[2][0], 2); 
+    EXPECT_EQ(result[2][1], 5); 
+    EXPECT_EQ(result[2][2], 8);
 }
 
 TEST(TDynamicMatrix, cant_add_matrices_with_not_equal_size)
 {
-  ADD_FAILURE();
+    TDynamicMatrix<int> matrix1(3);
+    TDynamicMatrix<int> matrix2(4);
+    EXPECT_THROW(matrix1 + matrix2, std::invalid_argument);
 }
 
 TEST(TDynamicMatrix, can_subtract_matrices_with_equal_size)
 {
-  ADD_FAILURE();
+    TDynamicMatrix<int> matrix1(3); 
+    TDynamicMatrix<int> matrix2(3); 
+    for (size_t i = 0; i < 3; ++i) {
+        for (size_t j = 0; j < 3; ++j) {
+            matrix1[i][j] = i + j; 
+            matrix2[i][j] = i * j; 
+        }
+    }
+    TDynamicMatrix<int> result = matrix1 - matrix2;
+    EXPECT_EQ(result[0][0], 0); // 0 - 0 = 0
+    EXPECT_EQ(result[0][1], 1); // 0 - 0 = 1
+    EXPECT_EQ(result[0][2], 2); // 0 - 0 = 2
+    EXPECT_EQ(result[1][0], 1); 
+    EXPECT_EQ(result[1][1], 1); 
+    EXPECT_EQ(result[1][2], 1); 
+    EXPECT_EQ(result[2][0], 2); 
+    EXPECT_EQ(result[2][1], 1); 
+    EXPECT_EQ(result[2][2], 0);
 }
 
 TEST(TDynamicMatrix, cant_subtract_matrixes_with_not_equal_size)
 {
-  ADD_FAILURE();
+    TDynamicMatrix<int> matrix1(3); 
+    TDynamicMatrix<int> matrix2(4); 
+    EXPECT_THROW(matrix1 - matrix2, std::invalid_argument);
 }
-
